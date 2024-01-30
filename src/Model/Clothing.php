@@ -5,6 +5,7 @@ namespace App\Model;
 
 use App\Model\Abstract\AbstractProduct;
 use App\Model\Interface\StockableInterface;
+use App\Model\Database;
 
 class Clothing extends AbstractProduct implements StockableInterface
 {
@@ -88,7 +89,7 @@ class Clothing extends AbstractProduct implements StockableInterface
 
     public function findOneById(int $id): static|false
     {
-        $pdo = new \PDO('mysql:host=localhost;dbname=draft-shop', 'root', '');
+        $pdo = Database::dbConnexion();
         $statement = $pdo->prepare('SELECT * FROM clothing INNER JOIN product ON clothing.product_id = product.id WHERE clothing.product_id = :id');
         $statement->bindValue(':id', $id, \PDO::PARAM_INT);
         $statement->execute();
@@ -114,7 +115,7 @@ class Clothing extends AbstractProduct implements StockableInterface
 
     public function findAll(): array
     {
-        $pdo = new \PDO('mysql:host=localhost;dbname=draft-shop', 'root', '');
+        $pdo = Database::dbConnexion();
         $statement = $pdo->prepare('SELECT * FROM clothing INNER JOIN product ON clothing.product_id = product.id');
         $statement->execute();
         $results = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -140,7 +141,7 @@ class Clothing extends AbstractProduct implements StockableInterface
 
     public function create(): static
     {
-        $pdo = new \PDO('mysql:host=localhost;dbname=draft-shop', 'root', '');
+        $pdo = Database::dbConnexion();
         $sql = "INSERT INTO product (name, photos, price, description, quantity, category_id, created_at, updated_at) VALUES (:name, :photos, :price, :description, :quantity, :category_id, :created_at, :updated_at)";
         $statement = $pdo->prepare($sql);
         $statement->bindValue(':name', $this->getName());
@@ -166,7 +167,7 @@ class Clothing extends AbstractProduct implements StockableInterface
 
     public function update(): static
     {
-        $pdo = new \PDO('mysql:host=localhost;dbname=draft-shop', 'root', '');
+        $pdo = Database::dbConnexion();
         $sql = "UPDATE product SET name = :name, photos = :photos, price = :price, description = :description, quantity = :quantity, category_id = :category_id, updated_at = :updated_at WHERE id = :id";
         $statement = $pdo->prepare($sql);
         $statement->bindValue(':id', $this->getId());
@@ -188,4 +189,5 @@ class Clothing extends AbstractProduct implements StockableInterface
         $statement->execute();
         return $this;
     }
+
 }

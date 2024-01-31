@@ -1,9 +1,10 @@
 <?php
-
 require_once 'vendor/autoload.php';
 
-use App\Model\Clothing;
+use App\Model\User;
 
-$clothing = new Clothing();
+$newUser = new User(null, 'momo', 'Morgane Maréchal', 'momo@momo.com', 'Hello45!', ['role' => 'ROLE_USER']);
+$newUser->create();
 
-var_dump($clothing->findAll());
+$newUser->setEmail('momo@momo.momo');
+$newUser->update();

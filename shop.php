@@ -36,14 +36,17 @@ $electronics = $electronic->findAll();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($clothes as $clothe) : ?>
+                    <?php foreach ($clothes as $clothe) :?>
+                    <?php $id_product=$clothe->getId(); ?>
+
                         <tr>
                             <td><?= $clothe->getName(); ?></td>
                             <td><?= $clothe->getDescription(); ?></td>
                             <td><?= $clothe->getPrice(); ?> €</td>
                             <td><?= $clothe->getSize(); ?></td>
                             <td><?= $clothe->getColor(); ?></td>
-                        </tr>
+                            <td><a href="http://localhost/my-little-mvc/product.php?id_product=<?=$id_product?>&product_type=clothing">Lien vers le produit</a></td>
+                    </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -61,11 +64,15 @@ $electronics = $electronic->findAll();
                 </thead>
                 <tbody>
                     <?php foreach ($electronics as $electronic) : ?>
+                        <?php $id_product=$electronic->getId(); ?>
+
                         <tr>
                             <td><?= $electronic->getName(); ?></td>
                             <td><?= $electronic->getDescription(); ?></td>
                             <td><?= $electronic->getPrice(); ?> €</td>
                             <td><?= $electronic->getWarantyFee(); ?> €</td>
+                            <td><a href="http://localhost/my-little-mvc/product.php?id_product=<?=$id_product?>&product_type=electronic">Lien vers le produit</a></td>
+
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

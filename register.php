@@ -60,10 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = htmlspecialchars($_POST['email']);
     $password = htmlspecialchars($_POST['password']);
     $passwordCheck = htmlspecialchars($_POST['password-check']);
-    $role=['ROLE_USER'];
+    $role = ['role' => 'ROLE_USER'];
 
     $new_user = new User(NULL,$login, $name, $email, $password,  $role);
     $productCreate=$new_user->create();
-// var_dump($productCreate);
   }
 ?>

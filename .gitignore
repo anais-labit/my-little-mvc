@@ -4,3 +4,4 @@ vendor
 composer.json
 composer.lock
 draft-shop.sql
+src/Model/Database.php

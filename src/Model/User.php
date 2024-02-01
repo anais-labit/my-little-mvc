@@ -7,7 +7,7 @@ use PDO;
 
 class User
 {
-    public function __construct(private ?int $id = null, private ?string $login = null, private ?string $fullname = null, private ?string $email = null, private ?string $password = null, private array $role)
+    public function __construct(private ?int $id = null, private ?string $login = null, private ?string $fullname = null, private ?string $email = null, private ?string $password = null, private ?array $role = null)
     {
         $this->id = $id;
         $this->login = $login;
@@ -59,7 +59,7 @@ class User
     /**
      * Get the value of fullname
      */
-    public function getfullname(): ?string
+    public function getFullname(): ?string
     {
         return $this->fullname;
     }
@@ -69,7 +69,7 @@ class User
      *
      * @return  self
      */
-    public function setfullname($fullname): User
+    public function setFullname($fullname): User
     {
         $this->fullname = $fullname;
 
@@ -79,7 +79,7 @@ class User
     /**
      * Get the value of email
      */
-    public function getemail(): ?string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -89,7 +89,7 @@ class User
      *
      * @return  self
      */
-    public function setemail($email): User
+    public function setEmail($email): User
     {
         $this->email = $email;
 
@@ -119,7 +119,7 @@ class User
     /**
      * Get the value of role
      */
-    public function getRole(): array
+    public function getRole(): ?array
     {
         return $this->role;
     }
@@ -158,6 +158,28 @@ class User
         return false;
     }
 
+    public function findOneByEmail(string $email): bool|User
+    {
+        $query = "SELECT * FROM user WHERE email = :email";
+        $statement = Database::dbConnexion()->prepare($query);
+        $statement->bindValue(':email', $email);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $user = new User(
+                $result['id'],
+                $result['login'],
+                $result['fullname'],
+                $result['email'],
+                $result['password'],
+                [$result['role']],
+            );
+            return $user;
+        }
+        return false;
+    }
+
     public function findAll(): array|bool
     {
         $query = "SELECT * FROM user";
@@ -175,7 +197,7 @@ class User
                 $result['fullname'],
                 $result['email'],
                 $result['password'],
-                $result['role'],
+                [$result['role']],
             );
             $users[] = $user;
         }
@@ -193,11 +215,11 @@ class User
         $statement = $dbConn->prepare($query);
 
         $newUser = $statement->execute([
-            ':login' => $this->login,
-            ':fullname' => $this->fullname,
-            ':email' => $this->email,
-            ':password' => $this->password,
-            ':role' => json_encode($this->role),
+            ':login' => $this->getLogin(),
+            ':fullname' => $this->getfullname(),
+            ':email' => $this->getEmail(),
+            ':password' => $this->getPassword(),
+            ':role' => json_encode(['role' => 'ROLE_USER']),
         ]);
 
         if ($newUser) {

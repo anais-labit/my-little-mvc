@@ -58,6 +58,7 @@ class AuthenticationController
                     "success" => true,
                     "message" => "Inscription réussie. Vous allez être redirigé(e)."
                 ]);
+                header('Location: login.php');
                 return true;
             } else if (!$this->passwordValidation($password)) {
                 echo json_encode([
@@ -87,26 +88,35 @@ class AuthenticationController
         }
     }
 
-    public function login(){
+    public function login(): bool
+    {
         $email = trim(htmlspecialchars($_POST['email']));
         $password = trim(htmlspecialchars($_POST['password']));
         $userModel = new User();
-        // var_dump($userModel->findOneByEmail($email));
-        $infoUser=$userModel->findOneByEmail($email);
-        $hashedPassword=$infoUser->getPassword();
+        $infoUser = $userModel->findOneByEmail($email);
+        $hashedPassword = $infoUser->getPassword();
 
-        if(($userModel->findOneByEmail($email))&&(password_verify($password, $hashedPassword))){
+        if (($userModel->findOneByEmail($email)) && (password_verify($password, $hashedPassword))) {
             echo password_verify($password, $hashedPassword);
-            $_SESSION['user']=$infoUser;
-            // var_dump($_SESSION['user']);
+            $_SESSION['user'] = $infoUser;
+            var_dump($_SESSION['user']);
             header('Location: shop.php');
-
-        }else{
+            return true;
+        } else {
             echo json_encode([
                 "success" => false,
                 "message" => "Informations d'identification incorrectes"
             ]);
+            return false;
         }
+    }
 
+    public function profile()  {
+
+        if ($_SESSION) {
+            return true;
+        } return false;
+
+        
     }
 }

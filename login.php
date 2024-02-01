@@ -3,11 +3,11 @@
 require_once 'vendor/autoload.php';
 
 use App\Controller\AuthenticationController;
+session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = htmlspecialchars($_POST['email']);
     $password = htmlspecialchars($_POST['password']);
-
     $user = new AuthenticationController();
     $user->login();
 }

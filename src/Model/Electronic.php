@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-
 use App\Model\Abstract\AbstractProduct;
 use App\Model\Interface\StockableInterface;
+use App\Model\Database;
 
 class Electronic extends AbstractProduct implements StockableInterface
 {

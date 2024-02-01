@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Model\Database;
+
 class Category
 {
     private ?int $id;

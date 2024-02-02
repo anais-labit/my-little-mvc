@@ -9,6 +9,9 @@ session_start();
 $user = new AuthenticationController;
 $user->profile();
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user->updateProfile();
+}
 ?>
 
 <!DOCTYPE html>
@@ -21,32 +24,42 @@ $user->profile();
 </head>
 
 <body>
-    <?php
-    if ($user->profile()) { ?>
-        <section>
-            <h2>Profil</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Login</th>
-                        <th>Fullname</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <?php foreach ($_SESSION as $info) : ?>
-                            <td><?= $info->getLogin(); ?></td>
-                            <td><?= $info->getFullname(); ?></td>
-                            <td><?= $info->getEmail(); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+
+
+    <main>
+        <h1>Profil</h1>
+        <form id="form-update" action="" method="POST" class="module-form">
+            <?php foreach ($_SESSION as $info) : ?>
+                <div class="module-form">
+                    <label for="login">Entrer le login : </label>
+                    <input type="text" name="login" id="login"  value="<?= $info->getLogin(); ?>" />
+                </div>
+                <div class="module-form">
+                    <label for="name">Entrer le nom : </label>
+                    <input type="text" name="fullname" id="fullname" value="<?= $info->getFullname(); ?>" />
+                </div>
+                <div class="module-form">
+                    <label for="email">Entrer le mail: </label>
+                    <input type="text" name="email" id="email" value="<?= $info->getEmail();?>"/>
+                </div>
+                <div class="module-form">
+                    <label for="password">Mot de passe: </label>
+                    <input type="password" name="password" id="password" />
+                </div>
+                <div class="module-form">
+                    <label for="password">Vérifier le mot de passe: </label>
+                    <input type="password" name="password-check" id="password-check" />
+                </div>
+                <div class="module-form">
+                    <input class="submit" type="submit" value="Soumettre" />
+                </div>
+            <?php endforeach; ?>
+
+        </form>
+
         </section>
-    <?php
-    }
-    ?>
+    </main>
+
 </body>
 
 </html>

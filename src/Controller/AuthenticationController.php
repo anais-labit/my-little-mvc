@@ -111,12 +111,91 @@ class AuthenticationController
         }
     }
 
-    public function profile()  {
-
+    public function profile(): bool
+    {
         if ($_SESSION) {
             return true;
-        } return false;
+        }
+        return false;
+    }
 
-        
+    public function updateProfile()
+    {
+        $login = trim(htmlspecialchars($_POST['login']));
+        $fullname = trim(htmlspecialchars($_POST['fullname']));
+        $email = trim(htmlspecialchars($_POST['email']));
+        $password = trim(htmlspecialchars($_POST['password']));
+        $passwordCheck = trim(htmlspecialchars($_POST['password-check']));
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $userModel = new User();
+        $userModel->setLogin($login)->setFullname($fullname)->setEmail($email)->setPassword($hashedPassword);
+
+        $id = $userModel->getId();
+        var_dump($userModel->getEmail());
+        var_dump($email, $id);
+
+        if (empty($login) || empty($fullname) || empty($password) || empty($passwordCheck)) {
+            echo json_encode([
+                "success" => false,
+                "message" => "Tous les champs doivent être remplis."
+            ]);
+            // return false;
+        }
+
+        if (isset($login) && isset($fullname) && isset($email) && isset($password) && isset($passwordCheck) && !$this->emailExists($email) && $userModel->getEmail() != $email) {
+
+            var_dump($_SESSION);
+            $_SESSION['user']->setLogin($login);
+            var_dump($id);
+            var_dump($login);
+            var_dump($password);
+            var_dump($passwordCheck);
+            var_dump($password === $passwordCheck);
+            var_dump($this->passwordValidation($password));
+            var_dump($this->emailValidation($email));
+
+
+            if (($password !== '' && $passwordCheck !== '') && ($password === $passwordCheck) && ($this->passwordValidation($password)) && ($this->emailValidation($email))) {
+                $_SESSION['user']->setFullname($fullname);
+                $_SESSION['user']->setEmail($email);
+                $_SESSION['user']->setPassword($hashedPassword);
+
+                var_dump($_SESSION);
+                var_dump($login);
+
+
+                $userModel->update();
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Mise à jour réussie."
+                ]);
+                return true;
+            } else if (!$this->passwordValidation($password)) {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Le mot de passe doit contenir au minimum huit caractères, une majuscule, un chiffre et un caractère spécial."
+                ]);
+                return false;
+            } else if (!$this->emailValidation($email)) {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Le format de l'email n'est pas valide."
+                ]);
+                return false;
+            } else {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Les mots de passe ne correspondent pas."
+                ]);
+                return false;
+            }
+        } else {
+            echo json_encode([
+                "success" => false,
+                "message" => "Cet email est déjà utilisé."
+            ]);
+            return false;
+        }
     }
 }

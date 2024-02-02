@@ -233,6 +233,11 @@ class User
 
     public function update(): User|bool
     {
+
+        var_dump($_SESSION);
+        var_dump($this->getLogin());
+        var_dump($this->getId());
+
         $query = "UPDATE user SET 
         login = :login, fullname = :fullname, email = :email, password = :password, role = :role 
         WHERE id = :id";
@@ -241,10 +246,10 @@ class User
 
         $updatedUser = $statement->execute([
             ':id' => $this->id,
-            ':login' => $this->login,
-            ':fullname' => $this->fullname,
-            ':email' => $this->email,
-            ':password' => $this->password,
+            ':login' => $this->getLogin(),
+            ':fullname' => $this->getFullname(),
+            ':email' => $this->getEmail(),
+            ':password' => $this->getPassword(),
             ':role' => json_encode($this->role),
         ]);
 

@@ -132,8 +132,6 @@ class AuthenticationController
         $userModel->setLogin($login)->setFullname($fullname)->setEmail($email)->setPassword($hashedPassword);
 
         $id = $userModel->getId();
-        var_dump($userModel->getEmail());
-        var_dump($email, $id);
 
         if (empty($login) || empty($fullname) || empty($password) || empty($passwordCheck)) {
             echo json_encode([
@@ -143,29 +141,17 @@ class AuthenticationController
             // return false;
         }
 
-        if (isset($login) && isset($fullname) && isset($email) && isset($password) && isset($passwordCheck) && !$this->emailExists($email) && $userModel->getEmail() != $email) {
+        if (isset($login) && isset($fullname) && isset($email) && isset($password) && isset($passwordCheck)) {
 
-            var_dump($_SESSION);
             $_SESSION['user']->setLogin($login);
-            var_dump($id);
-            var_dump($login);
-            var_dump($password);
-            var_dump($passwordCheck);
-            var_dump($password === $passwordCheck);
-            var_dump($this->passwordValidation($password));
-            var_dump($this->emailValidation($email));
-
-
+    
             if (($password !== '' && $passwordCheck !== '') && ($password === $passwordCheck) && ($this->passwordValidation($password)) && ($this->emailValidation($email))) {
                 $_SESSION['user']->setFullname($fullname);
                 $_SESSION['user']->setEmail($email);
                 $_SESSION['user']->setPassword($hashedPassword);
 
-                var_dump($_SESSION);
-                var_dump($login);
 
-
-                $userModel->update();
+                $userModel->update($_SESSION['user']->getId(), $login, $fullname, $hashedPassword);
                 echo json_encode([
                     "success" => true,
                     "message" => "Mise à jour réussie."

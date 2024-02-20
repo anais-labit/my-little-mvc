@@ -10,7 +10,9 @@ $user = new AuthenticationController;
 $user->profile();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     $user->updateProfile();
+    // var_dump($_SESSION);
 }
 ?>
 
@@ -29,18 +31,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <main>
         <h1>Profil</h1>
         <form id="form-update" action="" method="POST" class="module-form">
-            <?php foreach ($_SESSION as $info) : ?>
+            <?php foreach ($_SESSION as $info) : 
+?>
                 <div class="module-form">
+                    <div class="module-form">
+                        <label for="email">Mail: </label>
+                        <input type="text" name="email" id="email" value="<?= $info->getEmail();?>" readonly="readonly"/>
+                    </div>
                     <label for="login">Entrer le login : </label>
                     <input type="text" name="login" id="login"  value="<?= $info->getLogin(); ?>" />
                 </div>
                 <div class="module-form">
                     <label for="name">Entrer le nom : </label>
                     <input type="text" name="fullname" id="fullname" value="<?= $info->getFullname(); ?>" />
-                </div>
-                <div class="module-form">
-                    <label for="email">Entrer le mail: </label>
-                    <input type="text" name="email" id="email" value="<?= $info->getEmail();?>"/>
                 </div>
                 <div class="module-form">
                     <label for="password">Mot de passe: </label>

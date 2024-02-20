@@ -231,7 +231,7 @@ class User
         }
     }
 
-    public function update(): User|bool
+    public function update($id, $login, $fullname, $password): User|bool
     {
 
         var_dump($_SESSION);
@@ -239,18 +239,16 @@ class User
         var_dump($this->getId());
 
         $query = "UPDATE user SET 
-        login = :login, fullname = :fullname, email = :email, password = :password, role = :role 
+        login = :login, fullname = :fullname, password = :password 
         WHERE id = :id";
 
         $statement = Database::dbConnexion()->prepare($query);
 
         $updatedUser = $statement->execute([
-            ':id' => $this->id,
-            ':login' => $this->getLogin(),
-            ':fullname' => $this->getFullname(),
-            ':email' => $this->getEmail(),
-            ':password' => $this->getPassword(),
-            ':role' => json_encode($this->role),
+            ':id' => $id,
+            ':login' => $login,
+            ':fullname' => $fullname,
+            ':password' => $password
         ]);
 
         if ($updatedUser) {

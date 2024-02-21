@@ -1,11 +1,28 @@
 <?php
+
 require_once 'vendor/autoload.php';
 
-use App\Model\User;
+use AltoRouter;
 
+$router = new AltoRouter();
+$router->setBasePath('/plateforme/pwd');
 
-// $newUser = new User(null, 'momo', 'Morgane Maréchal', 'momo@momo.com', 'Hello45!', ['role' => 'ROLE_USER']);
-// $newUser->create();
+$router->map('GET', '/', function () {
+    echo "Hello homepage";
+});
 
-// $newUser->setEmail('momo@momo.momo');
-// $newUser->update();
+$router->map('GET', '/product', function () {
+    echo "Hello products list";
+});
+
+$router->map('GET', '/product/[i:id]', function ($id) {
+    echo "Hello product with id : $id";
+});
+
+$match = $router->match();
+
+if ($match) {
+    call_user_func_array($match['target'], $match['params']);
+} else {
+    echo "404 Not Found";
+}

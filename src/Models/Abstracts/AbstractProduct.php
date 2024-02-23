@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model\Abstract;
+namespace App\Models\Abstracts;
 
-use App\Model\Category;
-use App\Model\Database;
+use App\Models\Category;
+use App\Models\Database;
 
 abstract class AbstractProduct
 {
@@ -165,7 +165,6 @@ abstract class AbstractProduct
                 $category['updated_at'] ? (new \DateTime($category['updated_at'])) : null
             );
         }
-
         return false;
     }
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
-use App\Model\Abstract\AbstractProduct;
-use App\Model\Interface\StockableInterface;
-use App\Model\Database;
+use App\Models\Abstracts\AbstractProduct;
+use App\Models\Interfaces\StockableInterface;
+use App\Models\Database;
 
 class Electronic extends AbstractProduct implements StockableInterface
 {

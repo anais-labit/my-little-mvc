@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controllers;
 
-use App\Model\User;
+use App\Models\User;
 
 class AuthenticationController
 {
@@ -58,7 +58,7 @@ class AuthenticationController
                     "success" => true,
                     "message" => "Inscription réussie. Vous allez être redirigé(e)."
                 ]);
-                header('Location: login.php');
+                header('Location: login');
                 return true;
             } else if (!$this->passwordValidation($password)) {
                 echo json_encode([
@@ -99,8 +99,7 @@ class AuthenticationController
         if (($userModel->findOneByEmail($email)) && (password_verify($password, $hashedPassword))) {
             echo password_verify($password, $hashedPassword);
             $_SESSION['user'] = $infoUser;
-            var_dump($_SESSION['user']);
-            header('Location: shop.php');
+            header('Location: shop');
             return true;
         } else {
             echo json_encode([
@@ -136,20 +135,19 @@ class AuthenticationController
         if (empty($login) || empty($fullname) || empty($password) || empty($passwordCheck)) {
             echo json_encode([
                 "success" => false,
-                "message" => "Tous les champs doivent être remplis."
+                "message" => "Renseignez votre mot de passe"
             ]);
-            // return false;
+            return false;
         }
 
         if (isset($login) && isset($fullname) && isset($email) && isset($password) && isset($passwordCheck)) {
 
             $_SESSION['user']->setLogin($login);
-    
+
             if (($password !== '' && $passwordCheck !== '') && ($password === $passwordCheck) && ($this->passwordValidation($password)) && ($this->emailValidation($email))) {
                 $_SESSION['user']->setFullname($fullname);
                 $_SESSION['user']->setEmail($email);
                 $_SESSION['user']->setPassword($hashedPassword);
-
 
                 $userModel->update($_SESSION['user']->getId(), $login, $fullname, $hashedPassword);
                 echo json_encode([

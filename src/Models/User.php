@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
-use App\Model\Database;
+use App\Models\Database;
 use PDO;
 
 class User
@@ -233,11 +233,6 @@ class User
 
     public function update($id, $login, $fullname, $password): User|bool
     {
-
-        var_dump($_SESSION);
-        var_dump($this->getLogin());
-        var_dump($this->getId());
-
         $query = "UPDATE user SET 
         login = :login, fullname = :fullname, password = :password 
         WHERE id = :id";

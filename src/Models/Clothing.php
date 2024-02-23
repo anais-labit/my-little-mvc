@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
-use App\Model\Abstract\AbstractProduct;
-use App\Model\Interface\StockableInterface;
-use App\Model\Database;
+use App\Models\Abstracts\AbstractProduct;
+use App\Models\Interfaces\StockableInterface;
+use App\Models\Database;
 
 class Clothing extends AbstractProduct implements StockableInterface
 {
@@ -93,6 +93,7 @@ class Clothing extends AbstractProduct implements StockableInterface
         $statement->bindValue(':id', $id, \PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        
         if (!$result) {
             return false;
         }

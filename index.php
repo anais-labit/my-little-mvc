@@ -6,6 +6,7 @@ use App\Controllers\Router;
 
 $router = new Router('/plateforme/pwd');
 
+
 $router->addRoute('GET', '/', function () {
     require './ressources/views/register.php';
 });
@@ -13,12 +14,8 @@ $router->addRoute('GET', '/', function () {
 $router->addRoute('GET', '/register', function () {
     require './ressources/views/register.php';
 });
-
 $router->addRoute('POST', '/register', function () {
-    require './ressources/views/register.php';
-});
 
-$router->addRoute('GET', '/login', function () {
     require './ressources/views/login.php';
 });
 

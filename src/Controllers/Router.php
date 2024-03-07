@@ -18,7 +18,7 @@ class Router
         return $route;
     }
 
-    public function createUrl(string $routeName, array $params = []): string|null
+    public function createUrl(string $routeName, array $params = [], string $path = ''): string|null
     {
 
         var_dump($this->routes);
@@ -28,8 +28,10 @@ class Router
             if ($route->getName() === $routeName) {
                 // var_dump($this->basePath . $route->getUrl($params));
                 return $this->basePath . $route->getUrl($params);
+            } elseif ($route->getPath() === $path) {
+                var_dump($route->getUrl());
+                return $this->basePath . $route->getUrl($params);
             }
-            var_dump('toto');
         }
         return null;
     }

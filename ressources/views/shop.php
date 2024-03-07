@@ -55,7 +55,8 @@ $router = new Router('/plateforme/pwd');
                             // $page = $this->page = '/product/clothing/';
                             // $productUrl = $page . $clothe->getId();
 
-                            $productUrl = "/plateforme/pwd/product/clothing/" . $clothe->getId();
+                            $productUrl = $router->createUrl('', [], '/product/clothing') . $clothe->getId();
+                            var_dump($productUrl);
                         ?>
                             <tr>
                                 <td><?= $clothe->getName(); ?></td>

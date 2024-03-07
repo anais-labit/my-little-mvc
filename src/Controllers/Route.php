@@ -12,14 +12,43 @@ class Route
         $this->name = $name;
     }
 
+    /**
+     * Get the value of path
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Set the value of path
+     *
+     * @return  self
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
     public function getName()
     {
         return $this->name;
     }
 
-    public function setName(string $name): void 
+    public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getUrl($params)
+    {
+        $url = $this->path;
+        foreach ($params as $key => $value) {
+            $url .= '/' . $value;
+        }
+
+        return $url;
     }
 
     public function matches(string $method, string $path): bool

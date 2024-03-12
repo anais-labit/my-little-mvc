@@ -1,0 +1,12 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Set base URL
+RewriteBase /pwd/public/
+
+# Skip next rule if request is a file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite all other requests to index.php
+RewriteRule ^ index.php [QSA,L]

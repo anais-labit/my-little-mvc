@@ -2,59 +2,68 @@
 
 namespace App\Controllers;
 
+use App\Database;
 use App\Models\Product;
 
 /**
  * Class HomeController
- * @package App\Controllers
- *
- * This class is responsible for handling requests related to the home page and product pages.
+ * Handles the display of the home page and product pages.
  */
 class HomeController
 {
     /**
-     * Method to handle requests to the home page.
-     *
-     * This method includes the home page template which is responsible for rendering the home page.
-     *
-     * @return void
+     * @var Product The product model instance.
+     */
+    private Product $productModel;
+
+    /**
+     * HomeController constructor.
+     * Initializes the product model.
+     */
+    public function __construct()
+    {
+        $db = new Database();
+        $this->productModel = new Product($db);
+    }
+
+    /**
+     * Displays the home page.
      */
     public function index(): void
     {
-        // Include the home page template
-        include __DIR__ . '/../../templates/homepage.php';
+        $this->renderTemplate('homepage.php');
     }
 
     /**
-     * Method to handle requests to the product list page.
-     *
-     * This method fetches a list of products from the database and includes a template to display them.
-     *
-     * @return void
+     * Displays the product list page.
      */
     public function productList(): void
     {
-        $productModel = new Product();
-
-        $products = $productModel->getAll();
-
-        include __DIR__ . '/../../templates/product-list.php';
+        $products = $this->productModel->getAll();
+        $this->renderTemplate('product-list.php', ['products' => $products]);
     }
 
     /**
-     * Method to handle requests to individual product detail pages.
+     * Displays the product detail page.
      *
-     * This method fetches the details of the specified product from the database and includes a template to display them.
-     *
-     * @param mixed $id The ID of the product
-     * @return void
+     * @param mixed $id The ID of the product.
      */
     public function productDetail(mixed $id): void
     {
-        $productModel = new Product();
+        $product = $this->productModel->getById($id);
+        $this->renderTemplate('product-detail.php', ['product' => $product]);
+    }
 
-        $product = $productModel->getById($id);
+    /**
+     * Renders a template with the given data.
+     *
+     * @param string $template The template file name.
+     * @param array $data The data to pass to the template.
+     */
+    private function renderTemplate(string $template, array $data = []): void
+    {
+        extract($data);
 
-        include __DIR__ . '/../../templates/product-detail.php';
+        include __DIR__ . '/../../templates/' . $template;
     }
 }

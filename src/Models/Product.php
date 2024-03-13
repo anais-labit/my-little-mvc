@@ -4,64 +4,75 @@ namespace App\Models;
 
 use App\Database;
 use PDO;
+use PDOStatement;
 
 /**
  * Class Product
- * @package App\Models
- *
- * This class is responsible for fetching product data from the database.
+ * Handles the data access logic for products.
  */
 class Product
 {
     /**
-     * Fetch all products from the database.
-     *
-     * @return bool|array The fetched products as an associative array, or false on failure.
+     * @var PDO The database connection instance.
      */
-    public function getAll(): bool|array
+    private PDO $db;
+
+    /**
+     * Product constructor.
+     * Initializes the database connection.
+     *
+     * @param Database $db The database instance.
+     */
+    public function __construct(Database $db)
     {
-        // Create a new Database instance
-        $db = new Database();
-
-        // Connect to the database
-        $db->connect();
-        $conn = $db->connect();
-
-        // Prepare a SQL statement to fetch all products
-        $stmt = $conn->prepare('SELECT * FROM products');
-
-        // Execute the SQL statement
-        $stmt->execute();
-
-        // Fetch all products and return them as an associative array
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->db = $db->connect();
     }
 
     /**
-     * Fetch a product by its ID from the database.
+     * Retrieves all products from the database.
      *
-     * @param int $id The ID of the product to fetch.
-     * @return bool|array The fetched product as an associative array, or false on failure.
+     * @return bool|array The products, or false on failure.
+     */
+    public function getAll(): bool|array
+    {
+        return $this->executeStatement('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Retrieves a product by its ID from the database.
+     *
+     * @param int $id The ID of the product.
+     * @return bool|array The product, or false if not found.
      */
     public function getById(int $id): bool|array
     {
-        // Create a new Database instance
-        $db = new Database();
+        $stmt = $this->executeStatement('SELECT * FROM products WHERE id = :id', ['id' => $id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Connect to the database
-        $db->connect();
-        $conn = $db->connect();
+        if (!$product) {
+            return false;
+        }
 
-        // Prepare a SQL statement to fetch the product by its ID
-        $stmt = $conn->prepare('SELECT * FROM products WHERE id = :id');
+        return $product;
+    }
 
-        // Bind the ID parameter to the SQL statement
-        $stmt->bindParam(':id', $id);
+    /**
+     * Executes a SQL statement with the given parameters.
+     *
+     * @param string $sql The SQL statement.
+     * @param array $params The parameters for the SQL statement.
+     * @return bool|PDOStatement The statement, or false on failure.
+     */
+    private function executeStatement(string $sql, array $params = []): bool|PDOStatement
+    {
+        $stmt = $this->db->prepare($sql);
 
-        // Execute the SQL statement
+        foreach ($params as $key => $value) {
+            $stmt->bindValue(':' . $key, $value);
+        }
+
         $stmt->execute();
 
-        // Fetch the product and return it as an associative array
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt;
     }
 }

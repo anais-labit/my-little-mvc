@@ -2,17 +2,23 @@
 
 namespace App;
 
+/**
+ * Class Router
+ * Handles the routing logic for the application.
+ */
 class Router
 {
-    // An array to store all the routes
+    /**
+     * @var array The routes of the application.
+     */
     private array $routes = [];
 
     /**
-     * Add a new route to the router.
+     * Adds a route to the application.
      *
-     * @param string $method The HTTP method (GET, POST, etc.)
-     * @param string $path The path of the route
-     * @param callable $callback The function to execute when the route is matched
+     * @param string $method The HTTP method of the route.
+     * @param string $path The path of the route.
+     * @param callable $callback The callback to execute when the route is matched.
      */
     public function addRoute(string $method, string $path, callable $callback): void
     {
@@ -20,38 +26,52 @@ class Router
     }
 
     /**
-     * Run the router, matching the current request to the routes and executing the corresponding callback.
+     * Runs the application by matching and executing the appropriate route.
      */
     public function run(): void
     {
-        // Get the base path and the requested URI
-        $basepath = implode('/', array_slice(explode('/', $_SERVER['SCRIPT_NAME']), 0, -1)) . '/';
-        $uri = substr($_SERVER['REQUEST_URI'], strlen($basepath));
-        if (str_contains($uri, '?')) $uri = substr($uri, 0, strpos($uri, '?'));
-        $uri = trim($uri, '/');
+        $uri = $this->getUri();
+        $method = $this->getMethod();
 
-        // Get the request method
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        // Loop through the routes and check if any match the current request
         foreach ($this->routes as $route) {
             if ($route->match($method, $uri)) {
-                // If a match is found, run the callback and return
                 $route->run();
                 return;
             }
         }
 
-        // If no match is found, send a 404 response
         $this->sendNotFoundResponse();
     }
 
     /**
-     * Send a 404 Not Found response.
+     * Sends a 404 Not Found response.
      */
     private function sendNotFoundResponse(): void
     {
         header("HTTP/1.0 404 Not Found");
         echo "404 Not Found";
+    }
+
+    /**
+     * Retrieves the URI of the current request.
+     *
+     * @return string The URI.
+     */
+    private function getUri(): string
+    {
+        $basepath = implode('/', array_slice(explode('/', $_SERVER['SCRIPT_NAME']), 0, -1)) . '/';
+        $uri = substr($_SERVER['REQUEST_URI'], strlen($basepath));
+        if (str_contains($uri, '?')) $uri = substr($uri, 0, strpos($uri, '?'));
+        return trim($uri, '/');
+    }
+
+    /**
+     * Retrieves the HTTP method of the current request.
+     *
+     * @return string The HTTP method.
+     */
+    private function getMethod(): string
+    {
+        return $_SERVER['REQUEST_METHOD'];
     }
 }

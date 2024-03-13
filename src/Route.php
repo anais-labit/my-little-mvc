@@ -2,23 +2,39 @@
 
 namespace App;
 
+/**
+ * Class Route
+ * Handles the routing logic for the application.
+ */
 class Route
 {
-    // The path of the route
+    /**
+     * @var string The path of the route.
+     */
     private string $path;
-    // The function to execute when the route is matched
+
+    /**
+     * @var callable The callback to execute when the route is matched.
+     */
     private $callback;
-    // The HTTP method (GET, POST, etc.)
+
+    /**
+     * @var string The HTTP method of the route.
+     */
     private string $method;
-    // An array to store the parameters from the path
+
+    /**
+     * @var array The parameters for the route.
+     */
     private array $params = [];
 
     /**
-     * Create a new Route.
+     * Route constructor.
+     * Initializes the route with the given method, path, and callback.
      *
-     * @param string $method The HTTP method (GET, POST, etc.)
-     * @param string $path The path of the route
-     * @param callable $callback The function to execute when the route is matched
+     * @param string $method The HTTP method of the route.
+     * @param string $path The path of the route.
+     * @param callable $callback The callback to execute when the route is matched.
      */
     public function __construct(string $method, string $path, callable $callback)
     {
@@ -28,11 +44,11 @@ class Route
     }
 
     /**
-     * Check if the route matches the given method and URI.
+     * Checks if the route matches the given method and URI.
      *
-     * @param string $method The HTTP method (GET, POST, etc.)
-     * @param string $uri The requested URI
-     * @return bool True if the route matches, false otherwise
+     * @param string $method The HTTP method to match.
+     * @param string $uri The URI to match.
+     * @return bool True if the route matches, false otherwise.
      */
     public function match(string $method, string $uri): bool
     {
@@ -40,29 +56,33 @@ class Route
             return false;
         }
 
-        // Replace :params in the path with regex to capture the values
-        $pathRegex = preg_replace('/:\w+/', '(\w+)', $this->path);
-        $pathRegex = str_replace('/', '\/', $pathRegex);
+        $pathRegex = $this->createPathRegex();
 
         if (!preg_match('/^' . $pathRegex . '$/', $uri, $matches)) {
             return false;
         }
 
-        // Remove the first match (which is the whole string)
-        array_shift($matches);
-
-        // Store the captured values in the params property
-        $this->params = $matches;
+        $this->params = $matches[1] ?? [];
 
         return true;
     }
 
     /**
-     * Run the route's callback.
+     * Executes the callback of the route with the matched parameters.
      */
     public function run(): void
     {
-        // Pass the parameters to the callback function
         call_user_func_array($this->callback, $this->params);
+    }
+
+    /**
+     * Creates a regular expression from the path of the route.
+     *
+     * @return string The regular expression.
+     */
+    private function createPathRegex(): string
+    {
+        $pathRegex = preg_replace('/:\w+/', '(\w+)', $this->path);
+        return str_replace('/', '\/', $pathRegex);
     }
 }

@@ -12,3 +12,10 @@ INSERT INTO products (name, description, price) VALUES
 ('Headphones', 'Noise-cancelling headphones with superior sound quality.', 150.00),
 ('Smart Watch', 'Waterproof smartwatch with heart rate and sleep monitor.', 250.00),
 ('Backpack', 'Durable backpack with laptop compartment and waterproof material.', 70.00);
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

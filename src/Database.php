@@ -8,22 +8,37 @@ use PDOException;
 
 /**
  * Class Database
- * @package App
+ * Handles the database connection.
  */
 class Database
 {
+    /**
+     * @var string The host of the database.
+     */
     private string $host;
+
+    /**
+     * @var string The name of the database.
+     */
     private string $db_name;
+
+    /**
+     * @var string The username for the database.
+     */
     private string $username;
+
+    /**
+     * @var string The password for the database.
+     */
     private string $password;
 
     /**
      * Database constructor.
+     * Loads the environment variables and initializes the database credentials.
      */
     public function __construct()
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-        $dotenv->load();
+        $this->loadEnvVariables();
 
         $this->host = $_ENV['DB_HOST'];
         $this->db_name = $_ENV['DB_NAME'];
@@ -32,9 +47,19 @@ class Database
     }
 
     /**
-     * Connect to the database.
+     * Loads the environment variables from the .env file.
+     */
+    private function loadEnvVariables(): void
+    {
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+        $dotenv->load();
+    }
+
+    /**
+     * Connects to the database and returns the connection.
      *
-     * @return PDO
+     * @return PDO The database connection.
+     * @throws PDOException If the connection fails.
      */
     public function connect(): PDO
     {
@@ -46,7 +71,7 @@ class Database
 
             return $conn;
         } catch (PDOException $e) {
-            exit("Connection error: " . $e->getMessage());
+            throw new PDOException("Connection error: " . $e->getMessage());
         }
     }
 }

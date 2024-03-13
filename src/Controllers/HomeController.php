@@ -2,6 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Models\Product;
+
+/**
+ * Class HomeController
+ * @package App\Controllers
+ *
+ * This class is responsible for handling requests related to the home page and product pages.
+ */
 class HomeController
 {
     /**
@@ -13,33 +21,40 @@ class HomeController
      */
     public function index(): void
     {
+        // Include the home page template
         include __DIR__ . '/../../templates/homepage.php';
     }
 
     /**
      * Method to handle requests to the product list page.
      *
-     * This method currently just echoes a string, but in a real application, it would likely fetch a list of products
-     * from a database and include a template to display them.
+     * This method fetches a list of products from the database and includes a template to display them.
      *
      * @return void
      */
     public function productList(): void
     {
-        echo "Hello product list";
+        $productModel = new Product();
+
+        $products = $productModel->getAll();
+
+        include __DIR__ . '/../../templates/product-list.php';
     }
 
     /**
      * Method to handle requests to individual product detail pages.
      *
-     * This method currently just echoes a string with the product ID, but in a real application, it would likely fetch
-     * the details of the specified product from a database and include a template to display them.
+     * This method fetches the details of the specified product from the database and includes a template to display them.
      *
      * @param mixed $id The ID of the product
      * @return void
      */
     public function productDetail(mixed $id): void
     {
-        echo "Hello product with id: $id";
+        $productModel = new Product();
+
+        $product = $productModel->getById($id);
+
+        include __DIR__ . '/../../templates/product-detail.php';
     }
 }

@@ -62,7 +62,7 @@ class Route
             return false;
         }
 
-        $this->params = $matches[1] ?? [];
+        $this->params = isset($matches[1]) ? (array)$matches[1] : [];
 
         return true;
     }

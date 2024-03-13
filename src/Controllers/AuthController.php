@@ -99,6 +99,7 @@ class AuthController
         }
 
         $_SESSION['user_id'] = $user['id'];
+        $_SESSION['loggedin'] = true;
         echo "Login successful. Go to product list <a href='/pwd/public/product'>here</a> or <a href='/pwd/public/logout'>logout</a>.";
     }
 
@@ -109,6 +110,7 @@ class AuthController
     public function logout(): void
     {
         unset($_SESSION['user_id']);
+        unset($_SESSION['loggedin']);
         echo "You have been logged out. <a href='/pwd/public/login'>Login again</a>";
     }
 }

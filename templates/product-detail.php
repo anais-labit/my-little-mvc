@@ -13,6 +13,7 @@
     <h2><?= htmlspecialchars($product['name'], ENT_QUOTES) ?></h2>
     <p><?= htmlspecialchars($product['description'], ENT_QUOTES) ?></p>
     <p class="product-price">Price: <?= htmlspecialchars($product['price'], ENT_QUOTES) ?> €</p>
+    <a class="btn" href="/pwd/public/product/"> Return to product list</a>
 </div>
 </body>
 </html>

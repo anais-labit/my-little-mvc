@@ -10,12 +10,15 @@
     <h1>Product List</h1>
 </header>
 <div class="content">
+    <a class="btn" href="/pwd/public/logout">Déconnexion</a>
     <ul class="products-list">
         <?php foreach ($products as $product): ?>
             <li class="product-item">
-                <h2><?= htmlspecialchars($product['name'], ENT_QUOTES) ?></h2>
-                <p><?= htmlspecialchars($product['description'], ENT_QUOTES) ?></p>
-                <p class="product-price">Price: <?= htmlspecialchars($product['price'], ENT_QUOTES) ?> €</p>
+                <a href="/pwd/public/product/<?= htmlspecialchars($product['id'], ENT_QUOTES) ?>">
+                    <h2><?= htmlspecialchars($product['name'], ENT_QUOTES) ?></h2>
+                    <p><?= htmlspecialchars($product['description'], ENT_QUOTES) ?></p>
+                    <p class="product-price">Price: <?= htmlspecialchars($product['price'], ENT_QUOTES) ?> €</p>
+                </a>
             </li>
         <?php endforeach; ?>
     </ul>
